@@ -21,7 +21,7 @@ export function doctorReducer(state: any= [], action: Action) {
     switch (action.type) {
         case ADDDOCTOR:
             state = [...state, action.payload];
-            return state;
+            return state;   
         case EDITDOCTOR:
         let index = state.map(doctor => doctor.doctorid).indexOf(action.payload.doctorid);
             return [

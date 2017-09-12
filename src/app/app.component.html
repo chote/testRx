@@ -16,6 +16,6 @@
 
 <ul ><li *ngFor="let h of doctorlist$ | async"  >
     {{h.label}}  
-    <button  type="button" class="btn btn-primary btn-sm" (click)="edit()">แก้ไข</button> |
-     <button  type="button"  class="btn btn-sm btn-danger" (click)="delete()">ลบ</button>
+    <button  type="button" class="btn btn-primary btn-sm" (click)="edit(h)">แก้ไข</button> |
+     <button  type="button"  class="btn btn-sm btn-danger" (click)="delete(h)">ลบ</button>
 </li></ul>

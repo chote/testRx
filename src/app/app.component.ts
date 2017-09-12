@@ -53,14 +53,17 @@ export class AppComponent implements OnInit {
       this.store.dispatch({ type: RESET2 });
     }
     doAdd() {
-      let x = { doctorname: "สงคราม",value:this.lastDoctorID };
+      let x = { doctorname: "มดแดง" };
       let cc = [];
-      this._productService.getAdd(x, 'doctor').subscribe(res => cc = res, err => {
-          console.log('err');
-      }, () => {
-        console.log('ok save');
-        let doc = { label: "ทองม้วน", value: "500" };
-        this.store.dispatch({ type: ADDDOCTOR, payload: doc }); 
+      this._productService.getAdd(x, 'doctor').subscribe(res =>  {  
+        this._productService.getLastId('doctor', 'doctorid').subscribe(res => {
+console.log(res);
+
+          let doc = { label: "ทองม้วน", value: res[0].lastid };
+          
+            this.store.dispatch({ type: ADDDOCTOR, payload: doc }); 
+         });
+     
 
       });
     }
@@ -75,7 +78,7 @@ export class AppComponent implements OnInit {
         let sql = { sql: 'select doctorname as label,doctorid as value from doctor' };
         this._productService.getSql(sql).subscribe(resp => {
           this.doctors = resp;
-          this.lastDoctorID = this.doctors.slice(-1)[0].value;
+          this.lastDoctorID = + this.doctors.slice(-1)[0].value + 1;
           this.store.dispatch({ type: GETDOCTORLIST, payload: this.doctors });
           //  console.log( this.lastDoctorID);
         
