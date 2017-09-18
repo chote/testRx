@@ -1,17 +1,18 @@
-<button (click)="increment()">Increment</button>
-<div>Current Count: {{ counter$ | async }}</div>
-<button (click)="decrement()">Decrement</button>
 
-<button (click)="reset()">Reset Counter</button>
-<hr>
-<button (click)="increment2()">Increment</button>
-<div>Current Count: {{ double$ | async }}</div>
-<button (click)="decrement2()">Decrement</button>
+<md-toolbar color="primary">
+    <span>@Clinic 4.0</span>
 
-<button (click)="reset2()">Reset Counter</button>
-<hr>
-<button (click)="doAdd()">เพิ่มคนไข้ใหม่</button>
-<ul><li  *ngFor="let i of doctors">{{i.label}}</li></ul>
+  </md-toolbar>
+  <div class="button-row">
+    <button md-raised-button routerLink="/home">Home</button>
+    <button md-raised-button color="primary" routerLink="/tx">ห้องฟัน</button>
+    <button md-raised-button color="accent" routerLink="/lab">Lab</button>
+    <button md-raised-button color="warn" routerLink="/doctor">Doctor</button>
+    <button md-raised-button routerLink="/gov">เทศบาล</button>
+   
+  </div>
+<router-outlet></router-outlet>
+
 <hr>
 
 <ul ><li *ngFor="let h of doctorlist$ | async"  >

@@ -1,0 +1,64 @@
+<p>
+  tx works!
+</p>
+
+
+<button (click)="doAdd()">เพิ่มคนไข้ใหม่</button>
+<p-dataTable [value]="txlist$|async" 
+[style]="{'font-size':'0.6em','text-align':'center'}"
+[rows]="10" 
+[paginator]="true" 
+[rowsPerPageOptions]="[5,10,20,100]" 
+[editable]="true"
+[globalFilter]="gb" 
+[pageLinks]="3" 
+[responsive]="true" 
+[stacked]="stacked" tableStyleClass="prime-table">
+  <p-header>รายการรักษาทันตกรรม</p-header>
+  <p-column header="id">
+      
+  </p-column>
+  <p-column field="txdate" header="วันที่"></p-column>
+  <p-column field="doctorname" header="ทันตแพทย์"></p-column>
+  <p-column field="hn" header="เลขที่คนไข้"></p-column>
+  <p-column field="ptname" header="ชื่อ"></p-column>
+  <p-column field="ptsurname" header="นามสกุล"></p-column>
+  <p-column field="txnamestr" header="การรักษา"></p-column>
+  <p-column field="isspec" header="งานเฉพาะทาง">
+
+      <i class="material-icons">add</i>
+      <ng-template let-t="rowData" pTemplate="body">
+          <div *ngIf="t.isspec==1" align="center"> <i class="material-icons">done</i></div>
+      </ng-template>
+  </p-column>
+  <p-column field="cashpay" header="ค่ารักษา">
+      <ng-template let-t="rowData" pTemplate="body">
+          <div *ngIf="t.cashpay>0" align="center"> <span [style.color]="FF0000"> {{t.cashpay|number:'1.2'}}</span></div>
+      </ng-template>
+  </p-column>
+  <p-column field="govpay" header="เบิกเทศบาล">
+      <ng-template let-t="rowData" pTemplate="body">
+          <div *ngIf="t.govpay>0" align="center"> {{t.govpay|number:'1.2'}}</div>
+      </ng-template>
+  </p-column>
+  <p-footerColumnGroup>
+      <p-row>
+          <p-column footer="รวม :" colspan="8"></p-column>
+          <p-column footer="{{txsDay|sums:'cashpay'|number}}"></p-column>
+          <p-column footer="{{txsDay|sums:'govpay'|number}}"></p-column>
+
+      </p-row>
+  </p-footerColumnGroup>
+</p-dataTable>
+    <p-dialog header="หน้าต่างเพิ่ม แก้ไขข้อมูล" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+            <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="doctorid">รหัส</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id=txid" [(ngModel)]="tx.txid" /></div>
+                    <div class="ui-grid-col-4"><label for="txdate">วันที่</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="txdate" [(ngModel)]="tx.txdate" /></div>
+                </div>
+                <p-footer>
+                    <button type="button" pButton icon="fa-check" (click)="doSave()" label="Save">Save</button>
+                    <button type="button" pButton icon="fa-close" (click)="display=false" label="No">Cancel</button>
+                </p-footer>
+        </p-dialog>
