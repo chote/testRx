@@ -14,11 +14,17 @@ import * as _ from 'lodash';
   styleUrls: ['./base.component.css']
 })
 export class BaseComponent implements OnInit {
-
+  txlist$: Observable<any>;
+  acdoctor$: Observable<any>;
+  doctorlist$: Observable<any>;
+  flag$: Observable<any>;
   constructor( public store: Store<AppState>,public _productService: ProductService, public route: ActivatedRoute,
-    public router: Router) { }
+    public router: Router) { 
+
+    }
 
   ngOnInit() {
+    
   }
 
 }

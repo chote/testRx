@@ -11,12 +11,13 @@
     <button md-raised-button routerLink="/gov">เทศบาล</button>
    
   </div>
+  <div style="height: 500px;"
+  leaflet 
+  [leafletOptions]="options"
+  [leafletLayersControl]="layersControl">
+ >
+</div>
 <router-outlet></router-outlet>
 
-<hr>
 
-<ul ><li *ngFor="let h of doctorlist$ | async"  >
-    {{h.label}}  
-    <button  type="button" class="btn btn-primary btn-sm" (click)="edit(h)">แก้ไข</button> |
-     <button  type="button"  class="btn btn-sm btn-danger" (click)="delete(h)">ลบ</button>
-</li></ul>
+

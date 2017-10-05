@@ -1,64 +1,178 @@
-<p>
-  tx works!
-</p>
+ <div class="container">
+<div >
+  <div class="row"><div class="col">
+    <a  (click)="filterTable(i.doctorid)" class="waves-effect waves-light btn orange" style="margin:5px;" >ทั้งหมด</a>
+  
+ <a *ngFor="let i of doctorlist$|async" (click)="filterTable(i.doctorid)" class="waves-effect waves-light  btn blue" style="margin:5px;" >{{i.doctorname}}</a>
+</div></div> 
+<div class="row"><div class="col s2">
+เลือกเดือน
+</div><div class="row"><div class="col s2"> <p-dropdown autoWidth="true" [style]="{'width':'100%'}" [options]="cbMonths" [(ngModel)]="tx.doctorid"></p-dropdown>
+</div>
+<div class="col s7"><div class ="chip">ALL</div>
+<div class ="chip" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
+  {{i}}
+</div>
 
-
+</div>
+</div>  
+</div>
 <button (click)="doAdd()">เพิ่มคนไข้ใหม่</button>
-<p-dataTable [value]="txlist$|async" 
-[style]="{'font-size':'0.6em','text-align':'center'}"
-[rows]="10" 
-[paginator]="true" 
-[rowsPerPageOptions]="[5,10,20,100]" 
-[editable]="true"
-[globalFilter]="gb" 
-[pageLinks]="3" 
-[responsive]="true" 
-[stacked]="stacked" tableStyleClass="prime-table">
+<p-dataTable #dt [value]="txlistDt" [style]="{'font-size':'0.8em'}" [rows]="20" [paginator]="true"
+  [rowsPerPageOptions]="[5,10,20,100]" [editable]="true" [globalFilter]="gb" [pageLinks]="3" [responsive]="true" [stacked]="stacked"
+  sortField="txdate" rowGroupMode="subheader" groupField="txdate" [style]="{'margin-top':'50px'}"
+   tableStyleClass="prime-table">
   <p-header>รายการรักษาทันตกรรม</p-header>
-  <p-column header="id">
-      
+  <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['txdate']}}</ng-template>
+ 
+  <p-column field="doctorname" header="ทันตแพทย์" [filter]="true" filterMatchMode="equals">
+      <ng-template pTemplate="filter" let-col>
+          <p-dropdown [options]="valdoctors" [style]="{'width':'100%'}" (onChange)="doChangeDoctor(dt,$event,col)" styleClass="ui-column-filter"></p-dropdown>
+      </ng-template>
   </p-column>
-  <p-column field="txdate" header="วันที่"></p-column>
-  <p-column field="doctorname" header="ทันตแพทย์"></p-column>
   <p-column field="hn" header="เลขที่คนไข้"></p-column>
   <p-column field="ptname" header="ชื่อ"></p-column>
   <p-column field="ptsurname" header="นามสกุล"></p-column>
   <p-column field="txnamestr" header="การรักษา"></p-column>
   <p-column field="isspec" header="งานเฉพาะทาง">
 
-      <i class="material-icons">add</i>
-      <ng-template let-t="rowData" pTemplate="body">
-          <div *ngIf="t.isspec==1" align="center"> <i class="material-icons">done</i></div>
-      </ng-template>
+    <i class="material-icons">add</i>
+    <ng-template let-t="rowData" pTemplate="body">
+      <div *ngIf="t.isspec==1" align="center"> <i class="material-icons">done</i></div>
+    </ng-template>
   </p-column>
   <p-column field="cashpay" header="ค่ารักษา">
-      <ng-template let-t="rowData" pTemplate="body">
-          <div *ngIf="t.cashpay>0" align="center"> <span [style.color]="FF0000"> {{t.cashpay|number:'1.2'}}</span></div>
-      </ng-template>
+    <ng-template let-t="rowData" pTemplate="body">
+      <div *ngIf="t.cashpay>0" align="center"> <span [style.color]="FF0000"> {{t.cashpay|number:'1.2'}}</span></div>
+    </ng-template>
   </p-column>
   <p-column field="govpay" header="เบิกเทศบาล">
-      <ng-template let-t="rowData" pTemplate="body">
-          <div *ngIf="t.govpay>0" align="center"> {{t.govpay|number:'1.2'}}</div>
-      </ng-template>
+    <ng-template let-t="rowData" pTemplate="body">
+      <div *ngIf="t.govpay>0" align="center"> {{t.govpay|number:'1.2'}}</div>
+    </ng-template>
+  </p-column>
+  <p-column styleClass="col-button">
+    <ng-template pTemplate="header">
+      <button type="button" pButton icon="fa-refresh"></button>
+    </ng-template>
+    <ng-template let-car="rowData" pTemplate="body">
+      <button type="button" pButton (click)="doEdit(car)">แก้ไข</button>
+    </ng-template>
+
+  </p-column>
+  <p-column styleClass="col-button">
+    <ng-template pTemplate="header">
+      <button type="button" pButton icon="fa-refresh"></button>
+    </ng-template>
+    <ng-template let-car="rowData" pTemplate="body">
+      <button type="button" pButton (click)="doDelete(car.txrowid)">ลบ</button>
+    </ng-template>
+
   </p-column>
   <p-footerColumnGroup>
-      <p-row>
-          <p-column footer="รวม :" colspan="8"></p-column>
-          <p-column footer="{{txsDay|sums:'cashpay'|number}}"></p-column>
-          <p-column footer="{{txsDay|sums:'govpay'|number}}"></p-column>
+    <p-row>
+      <p-column footer="รวม :" colspan="8"></p-column>
+      <p-column footer="{{txsDay|sums:'cashpay'|number}}"></p-column>
+      <p-column footer="{{txsDay|sums:'govpay'|number}}"></p-column>
 
-      </p-row>
+    </p-row>
   </p-footerColumnGroup>
 </p-dataTable>
-    <p-dialog header="หน้าต่างเพิ่ม แก้ไขข้อมูล" [(visible)]="display" modal="modal" width="600" [responsive]="true">
-            <div class="ui-grid-row">
-                    <div class="ui-grid-col-4"><label for="doctorid">รหัส</label></div>
-                    <div class="ui-grid-col-8"><input pInputText id=txid" [(ngModel)]="tx.txid" /></div>
-                    <div class="ui-grid-col-4"><label for="txdate">วันที่</label></div>
-                    <div class="ui-grid-col-8"><input pInputText id="txdate" [(ngModel)]="tx.txdate" /></div>
-                </div>
-                <p-footer>
-                    <button type="button" pButton icon="fa-check" (click)="doSave()" label="Save">Save</button>
-                    <button type="button" pButton icon="fa-close" (click)="display=false" label="No">Cancel</button>
-                </p-footer>
-        </p-dialog>
+
+
+
+<p-dialog  [style]="{'font-size':'0.6em'}"  [width]="800" header="รายการรักษาทันตกรรม" [(visible)]="display" [responsive]="true" showEffect="fade" [modal]="true">
+  <div class="row">
+    <div class="col" >
+
+      <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="tx">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="doctorid">ทันตแพทย์</label></div>
+          <div class="ui-grid-col-8">
+            <p-dropdown autoWidth="true" [style]="{'width':'100%'}" [options]="cbDoctors" [(ngModel)]="tx.doctorid"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="txdate">วันรักษา</label></div>
+          <div class="ui-grid-col-8"><input type="date" [(ngModel)]="tx.txdate" /></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="ptname">ชื่อคนไข้</label></div>
+
+          <div class="ui-grid-col-8"><input pInputText id="ptname" [(ngModel)]="tx.ptname" #ptsearch (keyup)="filterPt(ptsearch.value)" /></div>
+
+        </div>
+
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="ptsurname">นามสกุล</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="ptsurname" [(ngModel)]="tx.ptsurname" /></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="hn">เลขที่คนไข้  </label><button class="btn btn-floating btn-small" (click)="getHn(tx.ptname,tx.ptsurname)">*</button></div>
+          <div class="ui-grid-col-8"><input pInputText id="hn" #hn [(ngModel)]="tx.hn" (keyup)="searchHn(hn.value)" /></div>
+        </div>
+
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="txnamestr">รายการรักษาทันตกรรม</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="txnamestr" [(ngModel)]="tx.txnamestr" /></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="txprice">ค่ารักษา</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="txprice" [(ngModel)]="tx.txprice" /></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="isgov">เบิกเทศบาล</label></div>
+
+          <div class="ui-grid-col-8">
+            <p-checkbox [(ngModel)]="tx.isgov" binary="true"></p-checkbox>
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="isspec">เฉพาะทาง</label></div>
+
+          <div class="ui-grid-col-8">
+            <p-checkbox [(ngModel)]="tx.isspec" binary="true"></p-checkbox>
+          </div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa-close" (click)="display=false" label="Delete">Cancel</button>
+          <button type="button" pButton icon="fa-check" (click)="doSave('edit')" label="Save">Save</button>
+        </div>
+      </p-footer>
+
+    </div>
+  
+    <div *ngIf="act=='add'" class="col s6"  >
+        <div class="margingap"><button (click)="setName()" class="btn btn-small blue block "> <i class="material-icons left">ใช้ข้อมูลล่าสุด</i></button></div>
+        <div class="margingap"><button (click)="setNow()" class="btn btn-small orange block "><i class="material-icons left">ใช้วันที่ปัจจุบัน</i></button></div>
+   <md-tab-group [selectedIndex]="selectedTab" >
+                       <md-tab label="ชื่อคนไข้">
+        <input type="text" #search (keyup)="filterPt(search.value)">
+
+        <p-dataTable [value]="ptFilters">
+            <p-column styleClass="col-button">
+
+                <ng-template let-car="rowData" pTemplate="body">
+                    <button type="button" pButton (click)="setPtname(car)" icon="fa-search">เลือก</button>
+                </ng-template>
+            </p-column>
+            <p-column field="hn" header="HN"></p-column>
+            <p-column field="ptname" header="ชื่อ"></p-column>
+            <p-column field="ptsurname" header="สกุล"></p-column>
+        </p-dataTable>
+       </md-tab>
+       <md-tab label="รายการรักษา">
+   
+      <div>ตัวเลือกรายการรักษาทันตกรรม</div>
+      <div style="overflow: scroll;height:400px" > <div class="chip"  *ngFor="let n of txnamelist;let i=index" (click)="setTxnamestr(n.name)">
+            {{n.name}}
+        </div></div>
+       </md-tab>
+   </md-tab-group>
+    </div>
+  </div>
+</p-dialog>
+
+
