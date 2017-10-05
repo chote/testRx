@@ -4,6 +4,7 @@ import { HomeComponent } from './clinic/home/home.component';
 import { LabComponent } from './clinic/lab/lab.component';
 import { TxComponent } from './clinic/tx/tx.component';
 import { DoctorComponent } from './clinic/doctor/doctor.component';
+import { ChartComponent } from './chart/chart.component';
 @NgModule({
   imports: [
     RouterModule.forRoot([
@@ -25,7 +26,10 @@ import { DoctorComponent } from './clinic/doctor/doctor.component';
       },
      { path: 'doctor',
       component: DoctorComponent
-    },
+      },
+      { path: 'chart',
+      component: ChartComponent
+    }, 
       {
         path: '**',
         redirectTo: '',

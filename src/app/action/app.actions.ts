@@ -30,20 +30,13 @@ export const ADDMDOCTOR = 'ADDMDOCTOR';
 export const GETMDOCTORLIST = 'GETMDOCTORLIST';
 export const EDITMDOCTOR = 'EDITMDOCTOR';
 export const DELMDOCTOR = 'DELMDOCTOR';
-
+export const SETACTIONDOCTORID = 'SETACTIONDOCTORID';
 export interface Action extends NgAction {
     id?: number;
     payload?: any;
 }
 
 
-export const INCREMENT = 'INCREMENT';
-export const DECREMENT = 'DECREMENT';
-export const RESET = 'RESET';
-
-export const INCREMENT2 = 'INCREMENT2';
-export const DECREMENT2 = 'DECREMENT2';
-export const RESET2 = 'RESET2';
 
 export const ADDDOCTOR = 'ADDDOCTOR';
 export const GETDOCTORLIST = 'GETDOCTORLIST';

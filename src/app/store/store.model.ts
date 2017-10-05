@@ -1,6 +1,4 @@
 export interface AppState {
-    counter: number;
-    double: number;
     doctorlist: any[];
     txlist: any[];
     lablist: any[];
@@ -10,5 +8,8 @@ export interface AppState {
     mdLabofficelist: any[];
     mdDoctorlist: any[];
     acDoctorid: number;
-    
-  }
+    flag: {
+        isDisplay: boolean;
+        activeDoctorid: number;
+    }
+}

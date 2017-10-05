@@ -106,6 +106,12 @@ url:string;
             .map((response: Response) => response.json())
            // .catch(this.handleError)
 }
+getTlist(tlistname:string): Observable<any> {
+    this.url= this.api+"tlist/"+tlistname+"/" +this.token;
+return this._http.get(this.url)//this._productUrlOne)
+        .map((response: Response) => response.json())
+       // .catch(this.handleError)
+}    
     getCopyObj(source,target) {
          for (let k in source) { 
      target[k] =source[k];
