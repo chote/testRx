@@ -1,0 +1,21 @@
+.hand{
+    cursor:pointer;
+}
+.fcontainer {
+    display: flex; /* or inline-flex */
+  }
+  .content{
+    flex-grow: 1;
+}
+.primary{
+    flex-grow: 6;
+}
+.secondary{
+    flex-grow: 1;
+}
+   .bgred{
+       background-color:palevioletred;
+       cursor:hand;
+       cursor:pointer;
+   }
+   

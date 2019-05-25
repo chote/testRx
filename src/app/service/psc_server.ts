@@ -17,7 +17,7 @@ hcode="10972";
     constructor(private _http: Http) {
 //this.token=this._dt.token;
     }
-    api: string="http://dmfzero.com/api/aclinic/apis.php/";
+    api: string="https://dmfzero.com/api/aclinic/apis.php/";
   //   api: string = "http://dmfzero.com/api/amat/apis.php/";  
    // api: string="http://dmfzero.com/api/serviceplan/apis.1.php/";
  addData(tbl:string,pd:any): Observable<any> {
@@ -32,7 +32,56 @@ hcode="10972";
            // .map(res => { console.log(res.json()) })
            .map((response: Response) => response.json()) 
     }
- dictDoctor = {};
+ getStoreTable(store,action,list$:Observable<any>,qlist:string){
+     let lns=0;
+     let sqlStr;
+     
+    list$.subscribe(ln => { lns = ln.length; });
+    if (lns == 0) {
+      this.getTlist(qlist).subscribe(response => {
+        sqlStr = response[0]['sqlstr'];
+       let sql = { sql: sqlStr };
+        this.getSql(sql).subscribe(resp => {
+        store.dispatch({ type: action, payload: resp });
+       
+        });
+      });
+    }
+}
+getStoreTableReturn(store,action,list$:Observable<any>,qlist:string){
+    let lns=0;
+    let arObj:any=[];
+    let sqlStr;
+    let arList:any=[];
+   list$.subscribe(ln => { lns = ln.length;arObj=ln; });
+   if (lns == 0) {
+     this.getTlist(qlist).subscribe(response => {
+       sqlStr = response[0]['sqlstr'];
+     
+       
+      let sql = { sql: sqlStr };
+      //console.log(sql);
+       this.getSql(sql).subscribe(resp => {
+           
+           arList = resp;  
+         //  console.log(arList);
+           
+       store.dispatch({ type: action, payload: resp });
+       return resp;
+       });
+     });                
+   }else{
+       arList=arObj; 
+       return ["ss","ee"];
+   }
+
+
+  
+   
+  
+}
+    dictDoctor = {};
+
  genDoctor(dc:any){ 
      let sql = {sql:"select * from doctor"};
      this.getSql(sql).subscribe(resp => {
@@ -96,7 +145,7 @@ hcode="10972";
         //return map[ptname[i]];
     }
       str2 = this.rpad(str2, '0', 2);    
-      let str3 = str1.substr(0,4) + '-' + str2.substr(0,2);
+      let str3 = str1.substr(0,4) + '-' + str2.substr(-2);
     return str3;    
 }
 url:string;
@@ -236,6 +285,20 @@ getAdd(st:any,tbl:any): Observable<any> {
            .map((response: Response) => response.json()) 
     }
 }
+getAddLab(st:any,tbl:any): Observable<any> {
+    {
+          let url= this.api+"postlab/"+tbl+"/"+this.token;   // console.log(url);
+         //st['updateId']=" mid="+st['mid'] +' and hcode=' +st['hcode']  ;
+            let body = JSON.stringify(st);
+      //console.log(body);
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        //    let options = new RequestOptions({ headers: headers });
+            return this._http.post(url, body, { headers: headers })
+               // .map(res => { console.log(res.json()) })
+               .map((response: Response) => response.json()) 
+        }
+    }
 getAddLastId(st:any,tbl:any,id:any): Observable<any> {
 {
       let url= this.api+"postlastid/"+tbl+"/"+id+"/"+this.token;   // console.log(url);
@@ -393,3 +456,10 @@ return now;
 
 }
 }
+export class Appvar{
+      public static isAdmin=false;
+      public static logDoctorid=0;
+      public static apptitle="โปรแกรมบันทึกคลีนิกทันตกรรม";
+    
+    }
+

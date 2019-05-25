@@ -19,3 +19,11 @@
 .ui-datatable .ui-paginator .ui-paginator-current {
     font-size: 8px !important;
 }
+.hand{
+  
+}
+.bgred{
+    background-color:palevioletred;
+    cursor:hand;
+    cursor:pointer;
+}

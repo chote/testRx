@@ -1,0 +1,17 @@
+.hand{
+   cursor: pointer; 
+  }
+  .bgred{
+      background-color:palevioletred;
+      cursor:hand;
+      cursor:pointer;
+  }
+  .colorgen{
+      color:blue;
+  }
+  .colorspec{
+      color:red;
+  }
+  span.ui-column-title{
+      min-width:0px  !important ; 
+  }

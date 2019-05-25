@@ -2,7 +2,8 @@ export interface AppState {
     doctorlist: any[];
     txlist: any[];
     lablist: any[];
-    govlist: any[];
+    labpaylist: any[];
+    doctorpaylist: any[];
     expenselist: any[];
     mdSupplierlist: any[];
     mdLabofficelist: any[];
@@ -11,5 +12,7 @@ export interface AppState {
     flag: {
         isDisplay: boolean;
         activeDoctorid: number;
+        logDoctorid:number;
+        isAdmin:boolean;
     }
 }

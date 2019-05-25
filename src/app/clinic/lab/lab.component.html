@@ -1,3 +1,187 @@
-<p>
-  lab works!
-</p>
+<nav class="pink">
+    <ul>
+      <li>
+          <a *ngFor="let i of doctorlist$|async" (click)="setTxdoctorid(i)" class="waves-effect waves-light  btn blue" style="margin:5px;">{{i.doctorname}}</a>
+
+       </li>
+  
+    </ul>
+  </nav>
+  <div class="row" style="padding:10px;  background-color:rgb(139, 172, 241)">
+      <div class="col s3">
+        <div class="chip">
+          <input class="with-gap" name="searchYear" type="radio" id="test5" [(ngModel)]="searchYear" [value]="2017">
+          <label for="test5">2560</label>
+          <input class="with-gap" name="searchYear" type="radio" id="test6" [(ngModel)]="searchYear" [value]="2018" />
+          <label for="test6">2561</label>
+          <input class="with-gap" name="searchYear" type="radio" id="test7" [(ngModel)]="searchYear" [value]="2019" />
+          <label for="test7">2562</label>
+        </div>
+      </div>
+      <div class="col s9">
+        <div class="chip hand bgred" *ngFor="let i of monthshort;let n=index" (click)="showM(n)">{{i}}
+        </div>
+      </div>
+    
+    </div>
+    
+    <div class="col s12 m7">
+    
+      <div class="card horizontal">
+        <div class="card-image">
+          <img [src]="doctorimg" width="100px" height="100px">
+        </div>
+        <div class="card-stacked">
+          <div class="card-content">
+            <p>{{doctorname}},เดือน {{thmonth[selectedmonth-1]}} พศ.{{searchYear}}</p>
+          </div>
+          <div class="card-action">
+            <div class="row">
+              <h6>
+                <div class="col s3">รวมค่าLab </div>
+                <div class="col s3 right-align"> {{calTotalPriceMonth("total")|currency:'THB' }}</div>
+                <div class="col s3 right-align"> หมอจ่ายค่าLab</div>
+                <div class="col s3 right-align"> {{calTotalPriceMonth("doctor")|currency:'THB' }}</div>
+              </h6>
+            </div>
+    
+       
+          </div>
+        </div>
+      </div>
+    </div>
+  <hr>
+<button (click)="doAdd()">เพิ่มงาน labใหม่</button>
+<p-dataTable #dt [value]="lablist$|async|labfilter:{doctorid:doctorid,month:selectedmonth,year:searchYear} " [style]="{'font-size':'0.8em'}" [rows]="20" [paginator]="false"
+[rowsPerPageOptions]="[5,10,20,100]" [editable]="true" [globalFilter]="gb" [pageLinks]="3" [responsive]="true" [stacked]="stacked"
+[style]="{'margin-top':'50px'}"
+ tableStyleClass="prime-table">
+<p-header>รายการLAb  ทันตกรรม</p-header>
+
+<p-column field="doctorname" header="ทันตแพทย์"></p-column>
+<p-column field="hn" header="เลขที่คนไข้"></p-column>
+<p-column field="ptname" header="ชื่อ"></p-column>
+<p-column field="ptsurname" header="นามสกุล"></p-column>
+<p-column field="labwork" header="รายการLab"></p-column>
+<p-column field="labofficename" header="บริษัทLab"></p-column>
+<p-column field="labsenddate" header="วันส่ง"></p-column>
+<p-column field="labappointment" header="วันนัด"></p-column>
+<p-column field="labreturndate" header="วันส่งกลับ"></p-column>
+<p-column field="labprice" header="ราคา"></p-column>
+<p-column field="ispaid" header="จ่ายแล้ว"></p-column>
+<p-column field="paydate" header="วันจ่าย"></p-column>
+<p-column styleClass="col-button">
+        <ng-template pTemplate="header">
+          <button type="button" pButton icon="fa-refresh"></button>
+        </ng-template>
+        <ng-template let-car="rowData" pTemplate="body">
+          <button type="button" pButton (click)="doEdit(car)">แก้ไข</button>
+        </ng-template>
+    
+      </p-column>
+     
+      <p-column styleClass="col-button">
+        <ng-template pTemplate="header">
+          <button type="button" pButton icon="fa-refresh"></button>
+        </ng-template>
+        <ng-template let-car="rowData" pTemplate="body">
+          <button type="button" pButton (click)="doDelete(car.labbillid)">ลบ</button>
+        </ng-template>
+    
+      </p-column>
+</p-dataTable>
+
+<p-dialog   [width]="800" header="รายการ  Lab" [(visible)]="display" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="row">
+      <div class="col" >
+  
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="lab">           
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="doctorid">ทันตแพทย์</label></div>
+            <div class="ui-grid-col-8">
+              <p-dropdown autoWidth="true" [style]="{'width':'100%'}" [options]="cbDoctors" [(ngModel)]="lab.doctorid"></p-dropdown>
+            </div>
+          </div>         
+          <div class="ui-grid-row">
+              <div class="ui-grid-col-4"><label for="labofficeid">บริษัทLab</label></div>
+              <div class="ui-grid-col-8">
+                  <select class="browser-default" name="labofficeid"  [(ngModel)]="lab.labofficeid">
+                      <option *ngFor="let val of laboffices" value={{val.labofficeid}}>
+                              {{val.labofficename}}
+                      </option>
+                  </select>
+              </div>
+            </div>
+
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="txdate">วันที่จ่ายLab</label></div>
+            <div class="ui-grid-col-8"><input type="date" [(ngModel)]="lab.paydate" /></div>
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="ptname">ชื่อคนไข้</label></div>
+  
+            <div class="ui-grid-col-8"><input pInputText id="ptname" [(ngModel)]="lab.ptname" #ptsearch (keyup)="filterPt(ptsearch.value)" /></div>
+  
+          </div>
+  
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="ptsurname">นามสกุล</label></div>
+            <div class="ui-grid-col-8"><input pInputText id="ptsurname" [(ngModel)]="lab.ptsurname" /></div>
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="hn">เลขที่คนไข้  </label><button class="btn btn-floating btn-small" (click)="getHn(lab.ptname,lab.ptsurname)">*</button></div>
+            <div class="ui-grid-col-8"><input pInputText id="hn" #hn [(ngModel)]="lab.hn" (keyup)="searchHn(hn.value)" /></div>
+          </div>
+  
+  
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for=labbillno>งานlab</label></div>
+            <div class="ui-grid-col-8"><input pInputText id="labbwork" [(ngModel)]="lab.labwork" /></div>
+          </div>
+       
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="labprice">ค่าLab</label></div>
+            <div class="ui-grid-col-8"><input pInputText id="labprice" [(ngModel)]="lab.labprice" /></div>
+          </div>
+         
+          
+        </div>
+        <p-footer>
+          <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="display=false" label="Delete">Cancel</button>
+            <button type="button" pButton icon="fa-check" (click)="doAddSave()" label="Save">Save</button>
+          </div>
+        </p-footer>
+  
+      </div>
+    
+      <div *ngIf="act=='add'" class="col s6"  >
+          <div class="margingap"><button (click)="setName()" class="btn btn-small blue block "> <i class="material-icons left">ใช้ข้อมูลล่าสุด</i></button></div>
+          <div class="margingap"><button (click)="setNow()" class="btn btn-small orange block "><i class="material-icons left">ใช้วันที่ปัจจุบัน</i></button></div>
+     <md-tab-group [selectedIndex]="selectedTab" >
+                         <md-tab label="ชื่อคนไข้">
+          <input type="text" #search (keyup)="filterPt(search.value)">
+  
+          <p-dataTable [value]="ptFilters">
+              <p-column styleClass="col-button">
+  
+                  <ng-template let-car="rowData" pTemplate="body">
+                      <button type="button" pButton (click)="setPtname(car)" icon="fa-search">เลือก</button>
+                  </ng-template>
+              </p-column>
+              <p-column field="hn" header="HN"></p-column>
+              <p-column field="ptname" header="ชื่อ"></p-column>
+              <p-column field="ptsurname" header="สกุล"></p-column>
+          </p-dataTable>
+         </md-tab>
+         <md-tab label="รายการรักษา">
+     
+        <div>ตัวเลือกรายการรักษาทันตกรรม</div>
+        <div style="overflow: scroll;height:400px" > <div class="chip"  *ngFor="let n of txnamelist;let i=index" (click)="setTxnamestr(n.name)">
+              {{n.name}}
+          </div></div>
+         </md-tab>
+     </md-tab-group>
+      </div>
+    </div>
+  </p-dialog>

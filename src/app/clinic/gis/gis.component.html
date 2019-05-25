@@ -1,0 +1,41 @@
+<nav>
+  <ul>
+    <li>
+      <button (click)="domap()">Create Map</button>
+    </li>
+  </ul>
+</nav>
+<div class="container">
+  <div class= "row">
+    <div class="col s9">
+      <!-- <div>
+    <input type=text list=browsers>
+    <datalist id=browsers>
+      <option value="Firefox">
+      <option value="IE">
+      <option value="Chrome">
+      <option value="Opera">
+      <option value="Safari">
+    </datalist>
+</div> -->
+      <div *ngIf="mapdisplay" leaflet style="height: 500px;" [leafletOptions]="options" [leafletLayersControl]="layersControl">
+
+      </div>
+      <p-overlayPanel #op2 [showCloseIcon]="true" [dismissable]="false">
+        Overview Angular CLI uses Webpack to manage dependency resolution and bundling. Things can get a little complicated when
+        you mix libraries that use different module systems. Leaflet is tricky because they recently migrated to using ES6
+        modules, but historically used an IIFE that exposed the library under the global variable L. This means that extensions
+        for Leaflet vary in how they package their own modules and require subtly different approaches to integrating with
+        your project. With most of these examples, there is more than one way to get things working. And, I'm not a Webpack
+        expert. So, if there are obvious improvements that can be made, feel free to submit an issue or a pull request. The
+        following is a list of projects that demonstrate how to integrate specific 3rd party plugins with @asymmetrik/ngx-leaflet
+        and @angular/cli.
+      </p-overlayPanel>
+    </div>
+    <div class="col s3" style="background-color:rgb(212, 210, 214)">
+      kkk
+<h2>oo={{imessage}}</h2>
+mmm
+    </div>
+    </div>
+  </div>

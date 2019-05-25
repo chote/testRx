@@ -1,3 +1,345 @@
-<p>
-  expense works!
-</p>
+<nav class="orange">
+  <ul>
+    <li>
+    </li>
+
+  </ul>
+</nav>
+
+<!-- <div layout="row">
+  <div style="background-color:grey" class="header">
+    <p>Header</p>
+  </div>
+  <div style="background-color:red" class="fcontainer">
+    <div class="content">
+      <p>Main Content</p>
+    </div>
+    <div style="background-color:blue" class="sidebar primary">
+      <p>Primary Sidebar</p>
+    </div>
+    <div style="background-color:yellow" class="sidebar secondary">
+      <p>Secondary Sidebar</p>
+    </div>
+  </div>
+  <div style="background-color:grey" class="footer">
+    <p>Footer</p>
+  </div>
+  <div flex>First item in row</div>
+  <div flex>Second item in row</div>
+</div> -->
+
+<div class="container card center " style="margin: 20px;margin-left:20px;">
+
+  <md-tab-group [selectedIndex]="selectedTab">
+    <md-tab label="เพิ่มรายการเบิกจ่าย">
+      <div class="row" style="margin: 20px;margin-left:50px;">
+        <div class="col s7">
+
+
+
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              <label for="expdate">วันที่</label>
+            </div>
+            <div class="ui-grid-col-8">
+              <input type="date" pInputText id="expdate" [(ngModel)]="expense.expdate" />
+            </div>
+          </div>
+
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              <label for="expname">รายการ</label>
+            </div>
+            <div class="ui-grid-col-8">
+              <input pInputText id="expname" [(ngModel)]="expense.expname" />
+            </div>
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              <label for="expcost">หมวดรายจ่าย</label>
+            </div>
+            <div class="ui-grid-col-8">
+
+              <select class="browser-default" [(ngModel)]="expense.expgrp_id">
+                <option value="">เลือกหมวดรายจ่าย</option>
+                <option *ngFor="let item of expensegroup" [value]="item.expgrp_id">
+                  {{item.groupname}}
+                </option>
+              </select>
+
+
+            </div>
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              <label for="expcost">ค่าใช้จ่าย</label>
+            </div>
+            <div class="ui-grid-col-8">
+              <input pInputText id="expcost" #expcost [(ngModel)]="expense.expcost" />
+            </div>
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              <label for="expmonth">รายเดือน</label>
+            </div>
+            <div class="ui-grid-col-8">
+              <input pInputText id="expmonth" [(ngModel)]="expense.expmonth" />
+            </div>
+          </div>
+
+
+          <div class="ui-dialog-buttonpane ui-helper-clearfix" align="right">
+            <button type="button" pButton icon="fa-check" (click)="getAddNew()" label="บันทึก">บันทึก</button>
+            <button type="button" pButton icon="fa-check" (click)="getClear()" label="บันทึก">Clear</button>
+          </div>
+
+          <hr>
+          <p-dataTable [value]="tmpExpenses">
+            <p-column field="expdate" header="วันที่">
+              <ng-template let-c="rowData" pTemplate="body">
+                <div>{{c.expdate}}</div>
+              </ng-template>
+
+            </p-column>
+            <p-column field="expname" header="รายการ">
+              <ng-template let-c="rowData" pTemplate="body">
+                <div>{{c.expname}}</div>
+              </ng-template>
+
+            </p-column>
+
+            <p-column field="expcost" header=" ราคา">
+              <ng-template let-c="rowData" pTemplate="body">
+                <div>{{c.expcost}}</div>
+              </ng-template>
+
+            </p-column>
+            <p-column field="expmonth" header=" รายเดือน">
+              <ng-template let-c="rowData" pTemplate="body">
+                <div>{{c.expmonth}}</div>
+              </ng-template>
+
+            </p-column>
+          </p-dataTable>
+
+        </div>
+
+        <div class="col s5">
+
+          <div class="card" style="height:500px;overflow:scroll;">
+            <div class=" hand" style="font-size:0.6em">
+              <div class="chip" (click)="showClearPrice(0)">Clear</div>
+              <div class="chip hand" *ngFor="let i of pricemenu" (click)="showPricePlus(i)">{{i}}
+              </div>
+
+            </div>
+            <button *ngFor="let c of expfevname;let i=index" (click)="getExpfev(i)">{{c}}</button>
+
+            <div style="float:none"></div>
+            <p-dataTable [value]="expnames">
+              <p-column field="expname" header="รายการ">
+                <ng-template let-c="rowData" pTemplate="body">
+                  <div class="hand" (click)="setExpname(c)">{{c.expname}}</div>
+                </ng-template>
+
+              </p-column>
+
+              <p-column field="expcost" header=" ราคา">
+                <ng-template let-c="rowData" pTemplate="body">
+                  <div>{{c.expcost}}</div>
+                </ng-template>
+
+              </p-column>
+
+            </p-dataTable>
+
+
+          </div>
+        </div>
+      </div>
+    </md-tab>
+    <md-tab label="รายการเบิกจ่าย">
+      <app-cbmonths [expmonth]="expmonth" (cbChangeEvent)="doSelectMonth($event)"></app-cbmonths>
+      <p-dataTable [value]="expenses" sortField="expdate" sortOrder='-1' rowGroupMode="subheader" groupField="expdate">
+        <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['expdate']}}</ng-template>
+        <p-column field="expdate" header="วันที่"></p-column>
+
+
+        <p-column field="expname" header="รายการ"></p-column>
+        <p-column field="expcost" header="ค่าใช้จ่าย"></p-column>
+
+        <p-column field="expmonth" header="ประจำเดือน"></p-column>
+
+
+        <p-column header="แก้ไขข้อมูล">
+          <ng-template let-c="rowData" pTemplate="body">
+            <button type="button" (click)="editExpense(c)">แก้ไข</button>
+          </ng-template>
+        </p-column>
+        <p-column s>
+          <ng-template pTemplate="header">
+            <button type="button" pButton icon="fa-refresh"></button>
+          </ng-template>
+          <ng-template let-car="rowData" pTemplate="body">
+            <button type="button" pButton (click)="doDelete(car.expid)">ลบ</button>
+          </ng-template>
+
+        </p-column>
+
+      </p-dataTable>
+
+    </md-tab>
+
+    <md-tab label="ค่าใช้จ่ายประจำ">
+      <md-tab-group [selectedIndex]="selectedTab">
+        <md-tab label="หมอ">
+            <div class="row" style="padding:10px;  background-color:rgb(139, 172, 241)">
+                <div class="col s3">
+                  <div class="chip">
+                    <input class="with-gap" name="searchYear" type="radio" id="test5" [(ngModel)]="searchYear" [value]="2017">
+                    <label for="test5">2560</label>
+                    <input class="with-gap" name="searchYear" type="radio" id="test6" [(ngModel)]="searchYear" [value]="2018" />
+                    <label for="test6">2561</label>
+                  </div>
+                </div>
+                <div class="col s9">
+                  <div class="chip hand bgred" *ngFor="let i of monthshort;let n=index" (click)="showM(n)">{{i}}
+                  </div>
+                </div>
+        
+              </div>
+        
+              <table class="bordered">
+                <thead>
+                  <tr>
+                    <th>เดือน</th>
+                    <th>กลุ่ม</th>
+                    <th>รายการ</th>
+                    <th>จำนวนเงิน</th>
+                  </tr>
+                </thead>
+        
+                <tbody>
+                  <tr *ngFor="let c of epmons">
+                    <td>11</td>
+                    <td> {{c.epgroup}}</td>
+                    <td> {{c.epitem}}</td>
+                    <td>
+                      <input class="browser-default" type="text"> </td>
+                  </tr>
+        
+                </tbody>
+              </table>
+
+        </md-tab>
+        <md-tab label="งานLab"></md-tab>
+        <md-tab label="รายเดือน"></md-tab>
+      </md-tab-group>
+
+
+
+    </md-tab>
+
+    <md-tab label="ตั้งค่ารายการหลัก">
+      <md-tab-group [selectedIndex]="selectedTab">
+        <md-tab label="หมอ">
+            <div class="row" style="padding:10px;  background-color:rgb(139, 172, 241)">
+                <div class="col s3">
+                  <div class="chip">
+                    <input class="with-gap" name="searchYear" type="radio" id="test5" [(ngModel)]="searchYear" [value]="2017">
+                    <label for="test5">2560</label>
+                    <input class="with-gap" name="searchYear" type="radio" id="test6" [(ngModel)]="searchYear" [value]="2018" />
+                    <label for="test6">2561</label>
+                  </div>
+                </div>
+                <div class="col s9">
+                  <div class="chip hand bgred" *ngFor="let i of monthshort;let n=index" (click)="showM(n)">{{i}}
+                  </div>
+                </div>
+        
+              </div>
+        
+              <table class="bordered">
+                <thead>
+                  <tr>
+                    <th>เดือน</th>
+                    <th>กลุ่ม</th>
+                    <th>รายการ</th>
+                    <th>จำนวนเงิน</th>
+                  </tr>
+                </thead>
+        
+                <tbody>
+                  <tr *ngFor="let c of epmons">
+                    <td>11</td>
+                    <td> {{c.epgroup}}</td>
+                    <td> {{c.epitem}}</td>
+                    <td>
+                      <input class="browser-default" type="text"> </td>
+                  </tr>
+        
+                </tbody>
+              </table>
+
+        </md-tab>
+        <md-tab label="งานLab"></md-tab>
+        <md-tab label="รายเดือน"></md-tab>
+      </md-tab-group>
+
+
+
+    </md-tab>
+  </md-tab-group>
+
+
+
+  <hr>
+
+
+
+
+</div>
+<div>
+  <p-dialog [style]="{'font-size':'0.6em'}" [width]="800" header="รายจ่าย" [(visible)]="display" [responsive]="true" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="expdate">วันที่</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input type="date" pInputText id="expdate" [(ngModel)]="expense.expdate" />
+      </div>
+    </div>
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="expname">รายการ</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input pInputText id="expname" [(ngModel)]="expense.expname" />
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="expcost">ค่าใช้จ่าย</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input pInputText id="expcost" #expcost [(ngModel)]="expense.expcost" />
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="expmonth">รายเดือน</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input pInputText id="expmonth" [(ngModel)]="expense.expmonth" />
+      </div>
+    </div>
+
+
+    <div class="ui-dialog-buttonpane ui-helper-clearfix" align="right">
+      <button type="button" pButton icon="fa-check" (click)="saveExpense()" label="บันทึก">บันทึก</button>
+    </div>
+  </p-dialog>
+
+</div>

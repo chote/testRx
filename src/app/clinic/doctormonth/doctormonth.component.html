@@ -1,0 +1,234 @@
+<a *ngFor="let i of doctorlist$|async" (click)="setTxdoctorid(i)" class="waves-effect waves-light  btn blue" style="margin:5px;">{{i.doctorname}}</a>
+<div class="row" style="padding:10px;  background-color:rgb(139, 172, 241)">
+  <div class="col s3">
+    <div class="chip">
+      <input class="with-gap" name="searchYear" type="radio" id="test5" [(ngModel)]="searchYear" [value]="2017">
+      <label for="test5">2560</label>
+      <input class="with-gap" name="searchYear" type="radio" id="test6" [(ngModel)]="searchYear" [value]="2018" />
+      <label for="test6">2561</label>
+      <input class="with-gap" name="searchYear" type="radio" id="test7" [(ngModel)]="searchYear" [value]="2019" />
+      <label for="test7">2562</label>
+    </div>
+  </div>
+  <div class="col s9">
+    <div class="chip hand bgred" *ngFor="let i of monthshort;let n=index" (click)="showM(n)">{{i}}
+    </div>
+  </div>
+
+</div>
+
+<div class="col s12 m7">
+
+  <div class="card horizontal">
+    <div class="card-image">
+      <img [src]="doctorimg" width="100px" height="100px">
+    </div>
+    <div class="card-stacked">
+      <div class="card-content">
+        <p>{{txDoctorname}},เดือน {{thmonth[selectedmonth-1]}} พศ.{{searchYear}}</p>
+      </div>
+      <div class="card-action">
+        <div class="row">
+          <h6>
+            <div class="col s3">รวมค่ารักษา </div>
+            <div class="col s3 right-align"> {{calTotalPriceMonth("total")|currency:'THB' }}</div>
+            <div class="col s4 right-align">รวมค่ารักษาเฉพาะทาง </div>
+            <div class="col s2 right-align"> {{calTotalPriceMonthSpec("total")|currency:'THB' }}</div>
+          </h6>
+        </div>
+
+        <div class="row">
+          <h6>
+            <div class="col s6">รายรับค่าบริการเดือนนี้ </div>
+            <div class="col s6 right-align">
+              <div align="right"  id="incometotal">{{calTotalPriceMonth("doctor")|currency:'THB'}}</div>
+            </div>
+          </h6>
+        </div>
+        <div class="row">
+          <h6>
+            <div class="col s3">ค่าLab </div>
+            <div class="col s3 right-align">
+              <div align="right" id="labpr">{{calTotalLabPrice()|currency:'THB'}}</div>
+            </div>
+            <div class="col s6"></div>
+          </h6>
+        </div>
+        <div class="row">
+          <h6>
+            <div class="col s6">ค่าLab/2 </div>
+            <div class="col s6 right-align">
+              <div align="right" id="labdoc">{{labofdoctor}}</div>
+            </div>
+          </h6>
+        </div>
+        <div class="row">
+          <h6>
+            <div class="col s6">รวมรายรับสุทธิ </div>
+            <div class="col s6 right-align">
+              <div align="right" #ss id="incomedoc">{{calTotalPriceMonth("doctor")-labofdoctor}}</div>
+            </div>
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<md-tab-group [selectedIndex]="selectedTab">
+  <md-tab label="รวมรายวัน">
+
+    <p-dataTable #dt [value]="txlist$|async|doctormonthfilter:{doctorid:txDoctorid,month:selectedmonth,year:searchYear}" [style]="{'font-size':'0.8em'}"
+      [rows]="20" [paginator]="false" [rowsPerPageOptions]="[5,10,20,100]" [editable]="true" [globalFilter]="gb" [pageLinks]="3"
+      [responsive]="true" sortField="txdate" rowGroupMode="subheader" groupField="txdate" [style]="{'margin-top':'50px'}" tableStyleClass="prime-table">
+      <p-header>รายการรักษาทันตกรรม</p-header>
+      <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['txdate']}}
+
+      </ng-template>
+
+      <p-column field="ptname" header="ชื่อ">
+        <ng-template let-t="rowData" let-ri="rowIndex" pTemplate="body">
+
+          {{ri+1}}. {{t.ptname}} {{t.ptsurname}}
+
+        </ng-template>
+
+      </p-column>
+
+
+      <p-column field="txnamestr" header="งาน">
+
+        <i class="material-icons">add</i>
+        <ng-template let-t="rowData" pTemplate="body">
+          <span>{{t.txnamestr}}</span>
+          <span class="badge red chip" *ngIf="t.isspec==1" align="center">
+            <i class="material-icons">done</i>
+          </span>
+         
+        </ng-template>
+      </p-column>
+
+
+
+
+      <p-column field="cashpay" header="ค่ารักษา">
+        <ng-template let-t="rowData" pTemplate="body">
+          <div align="right">
+            <span [style.color]="FF0000"> {{t.txprice}}</span>
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="cashpay" header="เฉพาะทาง">
+        <ng-template let-t="rowData" pTemplate="body">
+          <div align="right">
+            <span [style.color]="FF0000"> {{t.txprice * +t.isspec}}</span>
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column styleClass="col-button">
+        <ng-template pTemplate="header">
+          <i class="material-icons">event</i>
+        </ng-template>
+        <ng-template let-car="rowData" pTemplate="body">
+          <div align="center">
+            <a (click)=" showDialog(car)">
+              <i class="material-icons">record_voice_over</i>
+            </a>
+            <span>{{car['txcomment']}}</span>
+          </div>
+
+        </ng-template>
+
+      </p-column>
+      <ng-template pTemplate="rowgroupfooter" let-car>
+        <td colspan="2" style="text-align:right">Total Price</td>
+        <td style="text-align:right">{{calculateGroupTotal(car['txdate'])|number:'1.2' }}</td>
+        <td style="text-align:right">{{calculateGroupTotalSpec(car['txdate'])|number:'1.2' }}</td>
+      </ng-template>
+
+
+    </p-dataTable>
+  </md-tab>
+
+  <md-tab label="ตารางExcel">
+
+    <p-dataTable #dt [value]="txlist$|async|doctormonthfilter:{doctorid:txDoctorid,month:selectedmonth,year:searchYear}" [style]="{'font-size':'0.8em'}"
+      [rows]="20" [paginator]="false" [responsive]="true" sortField="txdate" [style]="{'margin-top':'50px'}" tableStyleClass="prime-table">
+      <p-column field="txdate" header="วันที่"></p-column>
+
+      <p-column field="ptname" header="ชื่อ">
+        <ng-template let-t="rowData" let-ri="rowIndex" pTemplate="body">
+
+          {{ri+1}}. {{t.ptname}} {{t.ptsurname}}
+
+        </ng-template>
+
+      </p-column>
+
+
+      <p-column field="txnamestr" header="งานเฉพาะทาง">
+
+        <i class="material-icons">add</i>
+        <ng-template let-t="rowData" pTemplate="body">
+          <span>{{t.txnamestr}}</span>
+
+        </ng-template>
+      </p-column>
+
+      <p-column field="isspec" header="งานเฉพาะทาง">
+
+        <i class="material-icons">add</i>
+        <ng-template let-t="rowData" pTemplate="body">
+
+          <span>{{t.isspec}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="cashpay" header="ค่ารักษา">
+        <ng-template let-t="rowData" pTemplate="body">
+          <div align="right">
+            <span [style.color]="FF0000"> {{t.txprice}}</span>
+          </div>
+        </ng-template>
+      </p-column>
+
+      <p-column styleClass="col-button">
+        <ng-template pTemplate="header">
+          <i class="material-icons">event</i>
+        </ng-template>
+        <ng-template let-car="rowData" pTemplate="body">
+          <div align="center">
+            <a (click)=" showDialog(car)">
+              <i class="material-icons">record_voice_over</i>
+            </a>
+            <span>{{car['txcomment']}}</span>
+          </div>
+
+        </ng-template>
+
+      </p-column>
+
+
+
+    </p-dataTable>
+  </md-tab>
+
+</md-tab-group>
+
+<p-dialog [width]="800" [height]="500" header="Comment รายการ" [(visible)]="display" [responsive]="true" showEffect="fade"
+  [modal]="true">
+  <div class="row" height="400px">
+    <div class="col" height="400px">
+      <textarea pInputTextarea style="height:300px" autoResize="autoResize" id="txcomment" [rows]="20" [cols]="100" [(ngModel)]="txcomment"></textarea>
+
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="display=false" label="Delete">Cancel</button>
+      <button type="button" pButton icon="fa-check" (click)="doSaveComment()" label="Save">Save</button>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,43 @@
+<p-dataTable #dt [value]="doctorpaylist$|async" [style]="{'font-size':'0.8em'}"
+[rows]="20" [paginator]="false" [rowsPerPageOptions]="[5,10,20,100]" [editable]="true" [globalFilter]="gb" [pageLinks]="3"
+[responsive]="true" sortField="paymonth" rowGroupMode="subheader" groupField="paymonth" [style]="{'margin-top':'50px'}" tableStyleClass="prime-table">
+<p-header>รายการจ่ายหมอ</p-header>
+<ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['paymonth']}}
+
+</ng-template>
+
+<p-column field="doctorname" header="ชื่อแพทย์">
+  <ng-template let-t="rowData" let-ri="rowIndex" pTemplate="body">
+
+    {{ri+1}}. {{t.doctorname}} 
+
+  </ng-template>
+
+</p-column>
+
+
+<p-column field="paydate" header="วันที่จ่าย">
+
+  <i class="material-icons">add</i>
+  <ng-template let-t="rowData" pTemplate="body">
+    <span>{{t.paydate}}</span>
+    
+  </ng-template>
+</p-column>
+
+
+
+
+<p-column field="cashpay" header="จำนวนเงิน">
+  <ng-template let-t="rowData" pTemplate="body">
+    <div align="right">
+      <span [style.color]="FF0000"> {{tpay}}</span>
+    </div>
+  </ng-template>
+</p-column>
+
+
+
+
+
+</p-dataTable>

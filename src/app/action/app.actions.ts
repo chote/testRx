@@ -5,16 +5,15 @@ export const GETTXLIST = 'GETTXLIST';
 export const EDITTX = 'EDITTX';
 export const DELTX = 'DELTX';
 
-export const ADDGOV = 'ADDGOV';
-export const GETGOVLIST = 'GETGOVLIST';
-export const EDITGOV = 'EDITGOV';
-export const DELGOV = 'DELGOV';
+export const ADDDOCTORPAY = 'ADDDOCTORPAY';
+export const GETDOCTORPAYLIST = 'GETDOCTORPAYLIST';
+export const EDITDOCTORPAY = 'EDITDOCTORPAY';
+export const DELDOCTORPAY = 'DELDOCTORPAY';
 
-
-export const ADDLAB = 'ADDLAB';
-export const GETLABLIST = 'GETLABLIST';
-export const EDITLAB = 'EDITLAB';
-export const DELLAB = 'DELLAB';
+export const ADDLABPAY = 'ADDLABPAY';
+export const GETLABPAYLIST = 'GETLABPAYLIST';
+export const EDITLABPAY = 'EDITLABPAY';
+export const DELLABPAY = 'DELLABPAY';
 
 export const ADDLABOFFICE = 'ADDLABOFFICE';
 export const GETLABOFFICELIST = 'GETLABOFFICELIST';
@@ -31,6 +30,7 @@ export const GETMDOCTORLIST = 'GETMDOCTORLIST';
 export const EDITMDOCTOR = 'EDITMDOCTOR';
 export const DELMDOCTOR = 'DELMDOCTOR';
 export const SETACTIONDOCTORID = 'SETACTIONDOCTORID';
+
 export interface Action extends NgAction {
     id?: number;
     payload?: any;
@@ -42,3 +42,10 @@ export const ADDDOCTOR = 'ADDDOCTOR';
 export const GETDOCTORLIST = 'GETDOCTORLIST';
 export const EDITDOCTOR = 'EDITDOCTOR';
 export const DELDOCTOR = 'DELDOCTOR';
+
+export const ADDLB = 'Add new lab';
+export const GETLBLIST = 'GETlabLIST';
+export const EDITLB = 'EDITlab';
+export const DELLB = 'DELlab';
+export const SETLOGDOCTOR = 'Set DoctorId';
+export const SETADMIN = 'Set Admin';
